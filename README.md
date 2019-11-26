@@ -1,6 +1,6 @@
 # LogRegular
 Some log regular
-异常处理
+# 异常处理
 
 不要捕获Java类库中定义的继承自 RuntimeException 的运行时异常类。
 如：IndexOutOfBoundsException/NullPointerException，这类异常由开发人员预检查来规避，保证程序的健壮性。
@@ -75,12 +75,15 @@ b. 使用抛异常返回方式，调用方如果没有捕获到就会产生运�
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 private static final Logger logger = LoggerFactory.getLogger(Abc.class);
+
 【强制】 对 trace/debug/info 级别的日志输出，必须使用条件输出形式或者使用占位符的方式。说明： logger.debug("Processing trade with id: " + id + " symbol: " + symbol); 如果日志级别是warn，上述日志不会打印，但是会执行字符串操作，如果 symbol 是对象，会执行 toString() 方法，浪费了系统资源，执行了上述操作，最终日志却没有打印。
 
 // 正例 （条件）
 if (logger.isDebugEnabled()) { logger.debug("Processing trade with id: " + id + " symbol: " + symbol); }
+
 // 正例 （占位符）
 logger.debug("Processing trade with id: {} and symbol: {}", id, symbol);
+
 输出的 POJO 类必须重写 toString 方法，否则输出此对象的 hashCode 值没什么参考意义。
 【推荐】 可以使用 warn 日志级别来记录用户输入参数错误的情况。注意日志输出的级别， error 级别只记录系统逻辑出错、异常、或者重要的错误信息。如非必要，请不要在此场景打出 error 级别，避免频繁报警。
 【推荐】 谨慎地记录日志。生产环境禁止输出 debug 日志；有选择地输出 info 日志；如果使用 warn 来记录刚上线时的业务行为信息，一定要注意日志输出量的问题。
